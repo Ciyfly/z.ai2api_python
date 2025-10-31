@@ -199,7 +199,7 @@ class ZAIProvider(BaseProvider):
                     # Get proxy configuration
                     proxies = self._get_proxy_config()
 
-                    async with httpx.AsyncClient(timeout=30.0, follow_redirects=True, proxy=proxies) as client:
+                    async with httpx.AsyncClient(timeout=30.0, follow_redirects=True, proxy=proxies, verify=False) as client:
                         response = await client.get(self.auth_url, headers=headers)
                         
                         self.logger.debug(f"响应状态码: {response.status_code}")
@@ -325,7 +325,7 @@ class ZAIProvider(BaseProvider):
             proxies = self._get_proxy_config()
 
             # 使用 httpx 上传文件
-            async with httpx.AsyncClient(timeout=30.0, proxy=proxies) as client:
+            async with httpx.AsyncClient(timeout=30.0, proxy=proxies, verify=False) as client:
                 files = {
                     "file": (filename, image_data, mime_type)
                 }
@@ -711,7 +711,7 @@ class ZAIProvider(BaseProvider):
                 proxies = self._get_proxy_config()
 
                 # 非流式响应
-                async with httpx.AsyncClient(timeout=30.0, proxy=proxies) as client:
+                async with httpx.AsyncClient(timeout=30.0, proxy=proxies, verify=False) as client:
                     response = await client.post(
                         transformed["url"],
                         headers=transformed["headers"],
@@ -745,6 +745,7 @@ class ZAIProvider(BaseProvider):
                 timeout=60.0,
                 http2=True,
                 proxy=proxies,
+                verify=False,
             ) as client:
                 self.logger.info(f"🎯 发送请求到 Z.AI: {transformed['url']}")
                 # self.logger.info(f"📦 请求体 model: {transformed['body']['model']}")

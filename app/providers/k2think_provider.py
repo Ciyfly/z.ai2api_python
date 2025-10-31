@@ -116,7 +116,7 @@ class K2ThinkProvider(BaseProvider):
         headers_for_handshake = {**self.config.headers}
         headers_for_handshake['Accept-Encoding'] = 'gzip, deflate'  # 移除br和zstd
 
-        async with httpx.AsyncClient() as client:
+        async with httpx.AsyncClient(verify=False) as client:
             handshake_response = await client.get(
                 self.handshake_url,
                 headers=headers_for_handshake,
@@ -180,7 +180,7 @@ class K2ThinkProvider(BaseProvider):
         headers_with_cookies = {**self.config.headers, 'Cookie': initial_cookies}
         headers_with_cookies['Accept-Encoding'] = 'gzip, deflate'  # 移除br和zstd
 
-        async with httpx.AsyncClient() as client:
+        async with httpx.AsyncClient(verify=False) as client:
             new_chat_response = await client.post(
                 self.new_chat_url,
                 headers=headers_with_cookies,
@@ -290,7 +290,7 @@ class K2ThinkProvider(BaseProvider):
 
         self.logger.info(f"🌊 开始K2Think流式请求")
 
-        async with httpx.AsyncClient(timeout=30.0) as client:
+        async with httpx.AsyncClient(timeout=30.0, verify=False) as client:
             async with client.stream(
                 "POST",
                 transformed["url"],
@@ -424,7 +424,7 @@ class K2ThinkProvider(BaseProvider):
                 return self._handle_stream_request(transformed, request)
             else:
                 # 非流式请求 - 使用传统的 client.post()
-                async with httpx.AsyncClient(timeout=30.0) as client:
+                async with httpx.AsyncClient(timeout=30.0, verify=False) as client:
                     response = await client.post(
                         transformed["url"],
                         headers=headers_for_request,

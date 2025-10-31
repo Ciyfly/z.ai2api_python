@@ -89,7 +89,7 @@ def get_latest_fe_version(force_refresh: bool = False) -> str:
         }
 
     try:
-        with httpx.Client(timeout=10.0, follow_redirects=True) as client:
+        with httpx.Client(timeout=10.0, follow_redirects=True, verify=False) as client:
             response = client.get(FE_VERSION_SOURCE_URL, headers=headers)
             response.raise_for_status()
             version = _extract_version(response.text)

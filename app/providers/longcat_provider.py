@@ -81,7 +81,7 @@ class LongCatProvider(BaseProvider):
         headers = self.create_headers_with_auth(token, user_agent)
         data = {"model": "", "agentId": ""}
 
-        async with httpx.AsyncClient(timeout=30.0) as client:
+        async with httpx.AsyncClient(timeout=30.0, verify=False) as client:
             response = await client.post(
                 self.session_create_url,
                 headers=headers,
@@ -106,7 +106,7 @@ class LongCatProvider(BaseProvider):
                 f"{self.base_url}/c/{conversation_id}"
             )
 
-            async with httpx.AsyncClient(timeout=30.0) as client:
+            async with httpx.AsyncClient(timeout=30.0, verify=False) as client:
                 url = f"{self.session_delete_url}?conversationId={conversation_id}"
                 response = await client.get(url, headers=headers)
 
@@ -192,7 +192,7 @@ class LongCatProvider(BaseProvider):
             transformed = await self.transform_request(request)
 
             # 发送请求
-            async with httpx.AsyncClient(timeout=30.0) as client:
+            async with httpx.AsyncClient(timeout=30.0, verify=False) as client:
                 response = await client.post(
                     transformed["url"],
                     headers=transformed["headers"],
